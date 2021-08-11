@@ -1,0 +1,76 @@
+## Licensed under the terms of http://www.apache.org/licenses/LICENSE-2.0
+
+PREFIX fuseki:  <http://jena.apache.org/fuseki#>
+PREFIX rdf:     <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs:    <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX tdb1:    <http://jena.hpl.hp.com/2008/tdb#>
+PREFIX tdb2:    <http://jena.apache.org/2016/tdb#>
+PREFIX jr:      <http://jena.hpl.hp.com/2003/>
+PREFIX ja:      <http://jena.hpl.hp.com/2005/11/Assembler#>
+PREFIX :        <#>
+
+[] rdf:type fuseki:Server ;
+   fuseki:services (
+     :service
+   ) .
+
+## Service description for "/dataset" with all endpoints.
+## e.g.
+##   GET /dataset/query?query=...
+##   GET /dataset/get?default (SPARQL Graph Store Protocol)
+
+:service rdf:type fuseki:Service ;
+    fuseki:name   "demo_data" ; # http://host:port/name
+    fuseki:endpoint [ 
+        fuseki:operation fuseki:query ;
+        fuseki:name "sparql" 
+    ];
+    fuseki:endpoint [
+        fuseki:operation fuseki:query ;
+        fuseki:name "query" 
+    ] ;
+    fuseki:endpoint [
+        fuseki:operation fuseki:update ;
+        fuseki:name "update"
+    ] ;
+    fuseki:endpoint [
+        fuseki:operation fuseki:gsp-r ;
+        fuseki:name "get"
+    ] ;
+    fuseki:endpoint [ 
+        fuseki:operation fuseki:gsp-rw ; 
+        fuseki:name "data"
+    ] ; 
+    fuseki:endpoint [ 
+        fuseki:operation fuseki:upload ;
+        fuseki:name "upload"
+    ] ; 
+    fuseki:dataset :demo_dataset ;
+    .
+
+# No rules
+# in-memory dataset.
+#:demo_dataset rdf:type ja:MemoryDataset ;
+#    # load data on startup
+#    ja:data "/fuseki/graph.ttl" .
+
+
+# With rules
+# Dataset with only the default graph.
+:demo_dataset rdf:type ja:RDFDataset ;
+    ja:defaultGraph :model_inf .
+
+# The inference model
+:model_inf a ja:InfModel ;
+     ja:baseModel :baseModel ;
+     ja:reasoner [
+         # ja:reasonerURL jr:TransitiveReasoner
+         ja:reasonerURL jr:GenericRuleReasoner ;
+         ja:rulesFrom <file:/fuseki/rules.ttl>
+     ] .
+
+# The base data.
+:baseModel a ja:MemoryModel ;
+    ja:content [ja:externalContent <file:/fuseki/graph.ttl> ] ;
+    .
+
