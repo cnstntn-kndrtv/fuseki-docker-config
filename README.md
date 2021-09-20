@@ -12,7 +12,7 @@ org:Organisation rdfs:subClassOf foaf:Agent ;
   rdfs:label "Организация"@ru .
 
 org:OrganizationalUnit rdfs:subClassOf foaf:Agent ;
-  rdfs:label "Организационная еденица"@ru .
+  rdfs:label "Организационное подразделение"@ru .
 
 org:Post a owl:Class ;
   rdfs:label 'Должность'@ru .
