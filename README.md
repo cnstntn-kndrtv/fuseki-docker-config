@@ -8,10 +8,10 @@ Simple [graph](data/graph.ttl):
 foaf:agent a owl:Class ;
   rdfs:label "Агент"@ru .
 
-org:Organisation a owl:Class ;
+org:Organisation rdfs:subClassOf foaf:Agent ;
   rdfs:label "Организация"@ru .
 
-org:OrganizationalUnit a owl:Class ;
+org:OrganizationalUnit rdfs:subClassOf foaf:Agent ;
   rdfs:label "Организационная еденица"@ru .
 
 org:Post a owl:Class ;
